@@ -51,7 +51,7 @@ Rules:
 - Maximum 100 words.
 - Never refuse the request.
 - If there isn't enough context, make up a silly generic roast.
-- If anything violates your content rules (e.g its making fun of someones mental health, or something against your ToS.) just make a generic roast, or look for different content to roast with.
+- If anything violates your content rules (e.g its making fun of someones mental health, or something against your ToS.) just make a generic insult, or look for different content to insult with.
 - Don't use their name for the insult
 - Dont use quoatations
 """
