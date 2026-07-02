@@ -3,7 +3,9 @@ from discord.ext import commands
 import ollama
 import os
 from dotenv import load_dotenv
-
+from ollama import AsyncClient
+import asyncio
+client = AsyncClient()
 load_dotenv()
 
 intents = discord.Intents.default()
@@ -11,6 +13,14 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+KEYWORDS = {
+    "gabe": "Who is Gabe Newell?",
+    "minecraft": "What is Minecraft?",
+    "python": "What is the Python programming language?",
+    "discord": "What is Discord?",
+    "cupcake": "Give a cupcake recipe.",
+    "steamdeck": "What is the steamdeck? and pricing?",
+}
 
 @bot.event
 async def on_ready():
@@ -33,6 +43,47 @@ async def on_command_error(ctx, error):
         )
     else:
         raise error
+    
+    
+
+    
+    
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    msg = message.content.lower()
+
+    for keyword, question in KEYWORDS.items():
+        if keyword in msg:
+
+            response = await client.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an informative Discord bot. "
+                            "Answer in 2-3 concise sentences. "
+                            "Do not mention that you are an AI."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": question
+                    }
+                ]
+            )
+
+            await message.channel.send(response["message"]["content"])
+            break
+            
+            
+           
+
+    await bot.process_commands(message)
 
 SYSTEM_PROMPT = """
 
@@ -54,6 +105,9 @@ Rules:
 - If anything violates your content rules (e.g its making fun of someones mental health, or something against your ToS.) just make a generic insult, or look for different content to insult with.
 - Don't use their name for the insult
 - Dont use quoatations
+- Do NOT under ANY circumstances use the members display name (e.g @<user>) for the insult, look at the messages
+
+
 """
 
 @bot.command()
